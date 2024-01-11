@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "marp --server --watch slides",
-    "build": "marp -I slides -o dist"
+    "build": "marp -I slides -o docs"
   },
   "keywords": [],
   "author": "hushin <ngtv.hsn@gmail.com>",
