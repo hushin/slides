@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "marp --server --watch slides",
+    "build": "marp -I slides -o dist"
   },
   "keywords": [],
   "author": "hushin <ngtv.hsn@gmail.com>",
