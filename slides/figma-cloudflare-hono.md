@@ -52,7 +52,7 @@ Share から フレーム単位で iframe のコードをコピーできる
 - メリット
   - 公式が提供してる方法なので簡単
   - 編集した内容がすぐに反映される
-  - 拡大してもキレイ
+  - 拡大しても綺麗
 - デメリット
   - Figma ファイルに誰でもアクセス可にしておく必要あり
   - 画像のほうがなにかと取り回ししやすい
@@ -96,7 +96,7 @@ $ curl -H 'X-FIGMA-TOKEN: figd_xxx' \
 
 - サーバーレスアプリケーションの構築ができる
 - JavaScript が動く
-- 無料枠アリ
+- 無料枠あり
 
 # [Hono](https://hono.dev/)
 
@@ -112,47 +112,64 @@ app.get('/', (c) => {
 });
 ```
 
-# 構成
-
-（図）
-
 # Demo
 
 https://try-figma-cloudflare.hushin.workers.dev/my/
 
 (Basic 制限あり)
 
-# コード解説
+- Basic 認証
+- 画像一覧
+- アップロード
+- 元の Figma URL に飛ぶ
+
+src https://github.com/hushin-sandbox/try-figma-cloudflare
 
 ---
 
-## 開発はまりポイント
+## アップロード
+
+![](https://try-figma-cloudflare.hushin.workers.dev/866e8cca-c8fa-413d-bb48-f2c5c6a6bc65.png)
+
+---
+
+## ダウンロード
+
+![](https://try-figma-cloudflare.hushin.workers.dev/acd1e1d5-96d2-413a-be3f-6e356306a646.png)
+
+参考
+
+- [Cloudflare R2 もいいぞ！ - ゆーすけべー日記](https://yusukebe.com/posts/2022/r2-beta/)
+- https://github.com/yusukebe/r2-image-worker
+
+---
+
+## 管理ページ
+
+- https://hono.dev/guides/jsx を使って記述
+  - 基本的に SSR
+- クライアント処理は [htmx](https://htmx.org/) と script タグ直書き
+- 参考 [Hono + htmx + Cloudflare は新しいスタック](https://zenn.dev/yusukebe/articles/e8ff26c8507799)
+
+# 開発はまりポイント
 
 - Node.js すべての機能が使えるわけではない
-  - ファイルシステムやネットワークリクエスト等
-  - [figma-api - npm](https://www.npmjs.com/package/figma-api) を使おうとしたが内部で axios を使っていてこけた
-- html が基本的に SSR されるのでクライアントサイドでリッチなことしようとすると大変
+  - [一部の API のみ対応](https://developers.cloudflare.com/workers/runtime-apis/nodejs/)
+  - [figma-api - npm](https://www.npmjs.com/package/figma-api) を使おうとしたが内部で axios を使っていて失敗
+- JSX は使えるが SSR されるのでクライアントでリッチなことしようとすると大変
   - [htmx](https://htmx.org/) 使いこなせたらもっと簡単に書ける？
   - 複雑だったら Cloudflare Workers は API 利用に留め Web アプリは別にするのがいいと感じた
+- サーバサイドの設計自信ない。個人制作なので雑でもいいかの精神
 
-# おわりに
+# 振り返り
 
-このスライドの画像は今回作った仕組みで出来ています
+- このスライドの画像は今回作ったものを埋め込んでいます
+- もともと同じ URL で画像が再編集可能だと便利そうと思って作ったが、キャッシュと相性悪くて断念
+- 勉強になったのでヨシ
 
-## 感想
+# 感想
 
-- 今までフロントエンド開発が中心で、バックエンドあまり書いてこなかった
+- 今までフロントエンド開発が中心で、<br>バックエンドあまり書いてこなかったが…
   - 馴染んだ TypeScript で書けるので楽しい！
-  - 無料、サーバレスなのが嬉しい
-- wrangler と hono の開発者体験が良い
-- 今後は Cloudflare D1 とか別のものも触っていきたい
-
-# Link
-
-- リポジトリ https://github.com/hushin-sandbox/try-figma-cloudflare
-
-## 参考
-
-- [Cloudflare Workers フレームワーク「Hono」の紹介 - ゆーすけべー日記](https://yusukebe.com/posts/2022/hono-40-things/)
-- [Cloudflare R2 もいいぞ！ - ゆーすけべー日記](https://yusukebe.com/posts/2022/r2-beta/)
-- [Hono + htmx + Cloudflare は新しいスタック](https://zenn.dev/yusukebe/articles/e8ff26c8507799)
+  - 無料でいろいろ使えてサーバレスなのが嬉しい
+- Wrangler(Cloudflare Workers の開発環境) と Hono の開発者体験が良い
