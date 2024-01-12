@@ -6,7 +6,7 @@ headingDivider: 1
 marp: true
 ---
 
-# Figma API + Cloudflare + hono で<br>画像共有
+# Figma API + Cloudflare + Hono で<br>画像共有
 
 ToKyoto.js #02
 2024/01/12
@@ -28,9 +28,9 @@ X: [@hush_in](https://github.com/hushin), Github: [hushin](https://github.com/hu
 # Figma
 
 - https://figma.com/
-- 言わずと知れたデザインツール
-- 無料で使える
-- ホワイトボードの FigJam
+- デザインツール
+- 無料
+- ホワイトボードの FigJam もある
   - ラフな図を描くのに便利
 
 ![bg right](https://try-figma-cloudflare.hushin.workers.dev/19511fb0-e380-43b7-b5fe-53a780706c41.png)
@@ -43,21 +43,8 @@ Figma/FigJam で書いた図をブログ等に埋め込みたい
 
 Share から フレーム単位で iframe のコードをコピーできる
 
-<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="350" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FgeJ0w0WA0LtyW6vxaaDnQK%2FGoogle-Material-Design%3Ftype%3Ddesign%26node-id%3D120%253A3%26mode%3Ddesign%26t%3DnDLSEYeaTlt45wA2-1" allowfullscreen></iframe>
-
----
-
-## iframe のメリデメ
-
-- メリット
-  - 公式が提供してる方法なので簡単
-  - 編集した内容がすぐに反映される
-  - 拡大しても綺麗
-- デメリット
-  - Figma ファイルに誰でもアクセス可にしておく必要あり
-  - 画像のほうがなにかと取り回ししやすい
-    - ブラウザ以外での表示
-    - レンダリングが早い
+<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="300" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FgeJ0w0WA0LtyW6vxaaDnQK%2FGoogle-Material-Design%3Ftype%3Ddesign%26node-id%3D120%253A3%26mode%3Ddesign%26t%3DnDLSEYeaTlt45wA2-1" allowfullscreen></iframe><br>
+とはいえ画像のほうがなにかと取り回ししやすい
 
 ---
 
@@ -90,35 +77,21 @@ $ curl -H 'X-FIGMA-TOKEN: figd_xxx' \
 
 30 日で期限が切れる
 
-そこで 自分が以前から気になっていた Cloudflare Workers と組み合わせてみることに
+そこで 自分が以前から気になっていた Cloudflare Workers と組み合わせてみた
 
 # [Cloudflare Workers](https://www.cloudflare.com/ja-jp/developer-platform/workers/)
 
 - サーバーレスアプリケーションの構築ができる
 - JavaScript が動く
 - 無料枠あり
-
-# [Hono](https://hono.dev/)
-
-フレームワークは人気がある Hono を使ってみた
-
-```TypeScript
-import { Hono } from 'hono';
-
-const app = new Hono();
-
-app.get('/', (c) => {
-  return c.text('Hello Hono!');
-});
-```
+- 開発フレームワークは人気がある [Hono](https://hono.dev/) を使ってみた
 
 # Demo
 
 https://try-figma-cloudflare.hushin.workers.dev/my/
 
-(Basic 制限あり)
+(Basic 認証あり)
 
-- Basic 認証
 - 画像一覧
 - アップロード
 - 元の Figma URL に飛ぶ
@@ -159,17 +132,40 @@ src https://github.com/hushin-sandbox/try-figma-cloudflare
 - JSX は使えるが SSR されるのでクライアントでリッチなことしようとすると大変
   - [htmx](https://htmx.org/) 使いこなせたらもっと簡単に書ける？
   - 複雑だったら Cloudflare Workers は API 利用に留め Web アプリは別にするのがいいと感じた
-- サーバサイドの設計自信ない。個人制作なので雑でもいいかの精神
+- サーバサイドの設計自信ない。個人制作なので雑でもいいやの精神
 
-# 振り返り
+
+# 感想
+
+- 今までフロントエンド開発が中心で、<br>バックエンドはあまり書いてこなかったが…
+  - 馴染んだ TypeScript で書けるので楽しい！
+  - 無料でいろいろ使えてサーバレスなのが嬉しい
+- Wrangler(Cloudflare Workers の開発環境) と Hono の開発者体験が良い
+- 今後も触っていきたい
+
+
+# 没スライド
+
+
+---
+
+
+## 振り返り
 
 - このスライドの画像は今回作ったものを埋め込んでいます
 - もともと同じ URL で画像が再編集可能だと便利そうと思って作ったが、キャッシュと相性悪くて断念
 - 勉強になったのでヨシ
 
-# 感想
+---
 
-- 今までフロントエンド開発が中心で、<br>バックエンドあまり書いてこなかったが…
-  - 馴染んだ TypeScript で書けるので楽しい！
-  - 無料でいろいろ使えてサーバレスなのが嬉しい
-- Wrangler(Cloudflare Workers の開発環境) と Hono の開発者体験が良い
+## iframe のメリデメ
+
+- メリット
+  - 公式が提供してる方法なので簡単
+  - 編集した内容がすぐに反映される
+  - 拡大しても綺麗
+- デメリット
+  - Figma ファイルを誰でもアクセス可にしておく必要あり
+  - 画像のほうがなにかと取り回ししやすい
+    - ブラウザ以外での表示
+    - レンダリングが早い
